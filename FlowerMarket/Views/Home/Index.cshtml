@@ -1,8 +1,98 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<FlowerModel>
+
+@{
+	ViewData["Title"] = "Магазин квітів";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+	<!-- Панель ПОШУКУ -->
+	<div class="row row-cols-auto justify-content-evenly">
+		<div class="input-group mb-3">
+			<label class="input-group-text" for="searchFieldType">Опції пошуку</label>
+			<select class="form-select" id="searchFieldType">
+				<option selected value="fName">Пошук за назвою</option>
+				<option value="fDir">Пошук за описом</option>
+			</select>
+			<input id="searchField" type="text" class="form-control" placeholder="Наприклад: Троянда" aria-label="Recipient's username" aria-describedby="button-addon2">
+			<button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="searchClick()">Пошук</button>
+		</div>
+	</div>
+	<!-- Панель СОРТУВАННЯ -->
+	<div class="row row-cols-auto justify-content-evenly">
+		<div class="input-group mb-3">
+			<select class="form-select" id="sortFor">
+				<option selected value="sName">Сортувати за назвою</option>
+				<option value="sPrice">Сортувати за ціною</option>
+			</select>
+			<select class="form-select" id="sortForValue">
+				<option selected value="minMax">Від меньшого до більшого</option>
+				<option value="maxMin">Від більшого до меньшого</option>
+			</select>
+			<button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="sortClick()">Сортувати</button>
+		</div>
+	</div>
+
+
+	<!-- Наповнення данними -->
+	<div class="row row-cols-auto justify-content-evenly">
+		@foreach (FlowerModel f in Model)
+		{
+			<div class="col mb-3">
+				<div class="card h-100" style="width: 18rem;">
+					<img src="@f.Img" class="card-img-top" alt="@f.Name">
+					<div class="card-body">
+						<h5 class="card-title text-center">@f.Name</h5>
+					</div>
+					<div class="card-footer">
+						<a href="#" class="btn btn-info w-100 mb-2" data-bs-whatever="@f.Description" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Детальніше</a>
+						<a href="#" class="btn btn-success w-100">Придбати: @f.Price грн.</a>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
 </div>
+
+
+<!-- Модальне вікно -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="staticBackdropLabel">Додаткова інформація</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="flowerDescription"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ок</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Модальне вікно END-->
+
+<script>
+	var exampleModal = document.getElementById('staticBackdrop')
+	
+	exampleModal.addEventListener('show.bs.modal', function (event) {
+		var button = event.relatedTarget;		
+		var recipient = button.getAttribute('data-bs-whatever');
+		var modalBodyInput = exampleModal.querySelector('.modal-body .flowerDescription');
+		modalBodyInput.innerHTML = recipient;
+	})
+
+	function searchClick() {
+		if (searchField.value != null && searchField.value.length > 1) {
+			location.href = "/Home/Search?typeSearh=" + searchFieldType.value + "&searchData=" + searchField.value;
+		}
+		else {
+			window.alert("Дуже короткий пошуковий запит")
+		}
+	}
+
+	function sortClick() {
+		location.href = "/Home/Sort?sortFor=" + sortFor.value + "&sortForValue=" + sortForValue.value;
+	}
+</script>

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<FlowerMarket.Models.FlowerModel>
+
+@{
+    ViewData["Title"] = "Адміністрування квітів";
+}
+
+<h1>Адміністрування квітів</h1>
+
+
+<a class="btn btn-success mb-1" asp-action="Create">Додати</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Зображення</th>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Ціна</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.Img" alt="@item.Name" style="max-width: 150px;" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <p class="d-inline-block text-truncate" style="max-width: 250px;">@item.Description</p>
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a class="btn btn-info mb-1" asp-action="Details" asp-route-id="@item.Id">Повна інформація</a> <br />
+                    <a class="btn btn-warning mb-1" asp-action="Edit" asp-route-id="@item.Id">Змінити</a> <br />
+                    <a class="btn btn-danger mb-1" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
